@@ -431,7 +431,24 @@ def cmd_export(args):
     print_logo()
     print(f"{Colors.CYAN}📦 导出快照{Colors.END}\n")
     
-    snapshot_id = input(f"{Colors.BOLD}快照 ID: {Colors.END}").strip()
+    # 列出可用快照
+    snapshots = manager.list_snapshots()
+    if not snapshots:
+        print_error("没有可用的快照")
+        return
+    
+    print("可用快照:")
+    for i, snap in enumerate(snapshots[:10], 1):
+        print(f"{i}. {snap['name']} ({snap['id'][:20]}...)")
+    
+    choice = input(f"\n{Colors.BOLD}输入要导出的快照 ID (或序号 1-{len(snapshots)}): {Colors.END}").strip()
+    
+    # 支持序号选择
+    if choice.isdigit() and 1 <= int(choice) <= len(snapshots):
+        snapshot_id = snapshots[int(choice) - 1]['id']
+    else:
+        snapshot_id = choice
+    
     export_path = input(f"{Colors.BOLD}导出路径 (默认 ~/Desktop): {Colors.END}").strip() or str(Path.home() / "Desktop")
     
     if manager.export_snapshot(snapshot_id, export_path):
@@ -456,7 +473,23 @@ def cmd_delete(args):
     print_logo()
     print(f"{Colors.RED}🗑️  删除快照{Colors.END}\n")
     
-    snapshot_id = input(f"{Colors.BOLD}要删除的快照 ID: {Colors.END}").strip()
+    # 列出可用快照
+    snapshots = manager.list_snapshots()
+    if not snapshots:
+        print_error("没有可用的快照")
+        return
+    
+    print("可用快照:")
+    for i, snap in enumerate(snapshots[:10], 1):
+        print(f"{i}. {snap['name']} ({snap['id'][:20]}...)")
+    
+    choice = input(f"\n{Colors.BOLD}输入要删除的快照 ID (或序号 1-{len(snapshots)}): {Colors.END}").strip()
+    
+    # 支持序号选择
+    if choice.isdigit() and 1 <= int(choice) <= len(snapshots):
+        snapshot_id = snapshots[int(choice) - 1]['id']
+    else:
+        snapshot_id = choice
     
     print_warning("⚠️  删除后无法恢复！")
     confirm = input(f"{Colors.BOLD}确认删除? 输入 'DELETE' 继续: {Colors.END}").strip()

@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="openclaw-snapshot",
-    version="1.0.0",
+    version="1.0.1",
     author="Duka Works",
     author_email="chenzhy.bj@gmail.com",
     description="🦞💾 OpenClaw 智能备份与恢复工具 - 留住每一刻",
